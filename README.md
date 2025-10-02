@@ -13,7 +13,7 @@
 ---
 
 <p align="center">
-  <img src="/img/Banner.png" alt="Contoh output WiFi Intrusion Detector" width="800"/>
+  <img src="/img/banner.png" alt="Contoh output WiFi Intrusion Detector" width="800"/>
 </p>
 
 ## 🔎 Ringkasan
