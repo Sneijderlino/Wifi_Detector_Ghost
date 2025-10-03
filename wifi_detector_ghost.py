@@ -1,14 +1,3 @@
-#Final 
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-WiFi Intrusion Detector (Final)
-- Bahasa Indonesia
-- Tambahan: banner, clear screen, efek menyeramkan, progress bar, port+dir scan (opsional)
-- Perubahan minimal pada logic asli deteksi
-"""
-
 import os
 import sys
 import time
