@@ -16,12 +16,10 @@
 
 ---
 
-
-
 ## 🔎 Ringkasan
 
-Wifi_Detector_Ghost adalah toolkit Python untuk keamanan jaringan wireless:  
-mendeteksi _deauthentication attack, rogue access point, probe flood, ARP spoofing, WPS exposure, dan open WiFi_.  
+Wifi*Detector_Ghost adalah toolkit Python untuk keamanan jaringan wireless:  
+mendeteksi \_deauthentication attack, rogue access point, probe flood, ARP spoofing, WPS exposure, dan open WiFi*.  
 Script ini menampilkan output berwarna, efek animasi CLI, serta dapat melakukan port scanning & directory scanning opsional.
 
 ---
@@ -101,7 +99,7 @@ Untuk fitur port scan / dir scan masih bisa digunakan.
 ## ▶ Cara Menjalankan
 
 ```bash
-sudo python3 wifi_detector.py
+sudo python3 Wifi_Detector_Ghost.py
 Interface monitor dapat diaktifkan dengan:
 sudo airmon-ng start wlan0
 Script juga akan menanyakan apakah ingin menjalankan port & dir scan sebelum deteksi.
@@ -112,7 +110,7 @@ t
 
 <p align="center">
   <img src="/img/Awal.png" alt="Contoh output WiFi Intrusion Detector" width="800"/><br>
-  <em>Demo Script Dijalankan: <code>sudo python3 wifi_detector.py</code></em>
+  <em>Demo Script Dijalankan: <code>sudo python3 Wifi_Detector_Ghost.py</code></em>
 </p>
 <p align="center">
   <img src="/img/Serangan terdeteksi.png" alt="Contoh deteksi deauth attack" width="800"/><br>
@@ -123,4 +121,3 @@ t
 
 <p>Script ini dibuat untuk pembelajaran & tujuan keamanan pribadi.
 ❌ Jangan digunakan untuk menyerang atau menguji jaringan orang lain tanpa izin eksplisit.</p>
-
