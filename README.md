@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/github/license/USERNAME/REPO?style=for-the-badge"/>
 </p>
 
-<h1 align="center">🚨 WiFi_Intrusion_Detector </h1>
+<h1 align="center">🚨 Wifi_Detector_Ghost.py </h1>
 <p align="center">
   All-in-one WiFi attack detection toolkit (Deauth → Rogue AP → ARP Spoof → Reporting).<br/>
   <em>Educational & Ethical Hacking Only — gunakan hanya pada jaringan yang Anda miliki izin eksplisit.</em>
@@ -20,7 +20,7 @@
 
 ## 🔎 Ringkasan
 
-_WiFi_Intrusion_Detector_ adalah toolkit Python untuk keamanan jaringan wireless:  
+Wifi_Detector_Ghost adalah toolkit Python untuk keamanan jaringan wireless:  
 mendeteksi _deauthentication attack, rogue access point, probe flood, ARP spoofing, WPS exposure, dan open WiFi_.  
 Script ini menampilkan output berwarna, efek animasi CLI, serta dapat melakukan port scanning & directory scanning opsional.
 
@@ -43,8 +43,8 @@ Script ini menampilkan output berwarna, efek animasi CLI, serta dapat melakukan 
 ## 📥 Cara Clone
 
 ```bash
-git clone https://github.com/Sneijderlino/Wifi_Intrusion_Detector.git
-cd Wifi_Intrusion_Detector
+git clone https://github.com/Sneijderlino/Wifi_Detector_Ghost.git
+cd Wifi_Detector_Ghost
 ```
 
 ## Instalasi Kali Linux
@@ -71,8 +71,8 @@ pip install -r requirements.txt
 ```bash
 pkg update && pkg upgrade -y
 pkg install -y python git
-git clone https://github.com/Sneijderlino/Wifi_Intrusion_Detector.git
-cd Wifi_Intrusion_Detector
+git clone https://github.com/Sneijderlino/Wifi_Detector_Ghost.git
+cd Wifi_Detector_Ghost
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -82,8 +82,8 @@ pip install -r requirements.txt
 ```bash
 pkg update && pkg upgrade -y
 pkg install -y python git
-git clone https://github.com/Sneijderlino/Wifi_Intrusion_Detector.git
-cd Wifi_Intrusion_Detector
+git clone https://github.com/Sneijderlino/Wifi_Detector_Ghost.git
+cd Wifi_Detector_Ghost
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
