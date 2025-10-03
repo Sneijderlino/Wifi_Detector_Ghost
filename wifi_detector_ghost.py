@@ -22,29 +22,28 @@ from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-# scapy & colorama
+
 from scapy.all import sniff, Dot11, ARP, Dot11Deauth, Dot11Elt, AsyncSniffer
 from colorama import Fore, Style, init
 
-# pyfiglet optional
+
 try:
     import pyfiglet
     _HAS_PYFIGLET = True
 except Exception:
     _HAS_PYFIGLET = False
 
-# init warna terminal
+
 init(autoreset=True)
 
-# logging
+
 logging.basicConfig(
     filename="wifi_guard.log",
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
-# -----------------------------
-# Konfigurasi threshold (tetap dari kode asli)
+
 DEAUTH_THRESHOLD = 5
 DEAUTH_WINDOW = 10
 PROBE_THRESHOLD = 30
@@ -52,7 +51,7 @@ PROBE_WINDOW = 5
 NEW_CLIENT_THRESHOLD = 10
 NEW_CLIENT_WINDOW = 60
 
-# ADDED state untuk deauth start/stop (minimal)
+
 deauth_counts = defaultdict(lambda: deque())
 deauth_state = {}
 from threading import Lock
@@ -68,30 +67,28 @@ ap_info = defaultdict(dict)
 running = True
 sniffer = None
 
-# WPS cooldown & whitelist
+
 WPS_ALERT_COOLDOWN = 60.0
 wps_last_alert = {}
 WHITELIST_BSSID = set([
-    # Tambahkan BSSID routermu yang ingin diabaikan, contoh:
-    # "f4:f6:47:a6:05:e4",
+    
 ])
 
-# -----------------------------
-# Warna untuk status (sesuai permintaan)
+
 COLOR_SAFE = Fore.GREEN
 COLOR_DANGER = Fore.RED
 COLOR_WARN = Fore.YELLOW
 COLOR_INFO = Fore.CYAN
 COLOR_INFO2 = Fore.MAGENTA
 
-# Helper printing hasil list style
+
 def print_result_ok(msg, warna=COLOR_SAFE):
     print(f"{warna}[✓]{Style.RESET_ALL} {msg}")
 
 def print_result_warn(msg, warna=COLOR_WARN):
     print(f"{warna}[!]{Style.RESET_ALL} {msg}")
 
-# Fungsi terminal alert (menggantikan previous terminal_alert)
+
 def terminal_alert(jenis, pesan, level="WARN"):
     """
     Menampilkan notifikasi hasil deteksi (satu baris), Bahasa Indonesia.
@@ -99,9 +96,9 @@ def terminal_alert(jenis, pesan, level="WARN"):
     """
     ts = time.strftime("%Y-%m-%d %H:%M:%S")
     tag = f"{ts} TERDETEKSI: {jenis} — {pesan}"
-    # Pilih warna berdasarkan jenis
+    
     if jenis in ("DEAUTH", "DEAUTH_BERHENTI", "ARP_SPOOF"):
-        # bahaya
+
         print(f"{COLOR_DANGER}{Style.BRIGHT}{tag}{Style.RESET_ALL}")
         logging.warning(f"{jenis} — {pesan}")
     elif jenis in ("ROGUE_AP", "EVIL_TWIN"):
@@ -114,8 +111,7 @@ def terminal_alert(jenis, pesan, level="WARN"):
         print(f"{COLOR_INFO}{Style.BRIGHT}{tag}{Style.RESET_ALL}")
         logging.info(f"{jenis} — {pesan}")
 
-# -----------------------------
-# Cleaner thread untuk deauth STOP
+
 def cleaner_loop():
     global running
     while running:
@@ -130,17 +126,16 @@ def cleaner_loop():
                         st["active"] = False
                         terminal_alert("DEAUTH_BERHENTI", f"MAC sumber {mac} tidak mengirim deauth selama {NO_DEAUTH_TIMEOUT}s (serangan dianggap berhenti)", level="INFO")
                         logging.info(f"Deauth stopped for {mac}")
-            # cleanup probe
+            
             for mac, dq in list(probe_counts.items()):
                 while dq and now - dq[0] > PROBE_WINDOW:
                     dq.popleft()
-            # cleanup new clients
+    
             for ap, lst in list(new_clients.items()):
                 new_clients[ap] = [(c, t) for c, t in lst if now - t <= NEW_CLIENT_WINDOW]
         time.sleep(CLEANER_INTERVAL)
 
-# -----------------------------
-# Handler deauth (minimal changes)
+
 def handle_deauth(pkt, now):
     src = getattr(pkt, "addr2", None)
     tgt = getattr(pkt, "addr1", None)
@@ -161,8 +156,7 @@ def handle_deauth(pkt, now):
             else:
                 logging.debug(f"DEAUTH berlanjut dari {src} count={len(deauth_counts[src])}")
 
-# -----------------------------
-# Detektor utama (tetap logika asli, hanya pesan Bahasa Indonesia)
+
 def detect(pkt):
     now = time.time()
     try:
