@@ -165,7 +165,7 @@ def detect(pkt):
             handle_deauth(pkt, now)
             return
 
-        # Beacon / ProbeResp -> info AP, rogue, WPS, open
+
         if pkt.haslayer(Dot11Elt) and getattr(pkt, "type", None) == 0 and getattr(pkt, "subtype", None) in (8, 5):
             ssid = pkt.info.decode(errors="ignore") if isinstance(pkt.info, (bytes, bytearray)) else str(pkt.info)
             bssid = getattr(pkt, "addr2", None)
@@ -180,7 +180,7 @@ def detect(pkt):
                     bssids = [k for k, v in ap_info.items() if v.get("ssid") == ssid]
                     terminal_alert("ROGUE_AP", f"SSID '{ssid}' muncul di beberapa BSSID: {bssids}")
 
-            # WPS detection: rate-limit + whitelist
+
             elt = pkt.getlayer(Dot11Elt)
             while elt:
                 try:
@@ -198,7 +198,7 @@ def detect(pkt):
                     pass
                 elt = elt.payload.getlayer(Dot11Elt)
 
-            # Open network detection
+        
             try:
                 cap = pkt.sprintf("{Dot11.cap%04xr}").lower()
                 if "privacy" not in cap:
@@ -210,7 +210,6 @@ def detect(pkt):
                 pass
             return
 
-        # Probe request -> probe flood
         if pkt.haslayer(Dot11) and getattr(pkt, "type", None) == 0 and getattr(pkt, "subtype", None) == 4:
             client = getattr(pkt, "addr2", None)
             if client:
@@ -222,7 +221,7 @@ def detect(pkt):
                         terminal_alert("PROBE_FLOOD", f"Klien {client} mengirim {len(probe_counts[client])} probe request dalam {PROBE_WINDOW}s")
             return
 
-        # Data frame -> lonjakan klien baru
+
         if pkt.haslayer(Dot11) and getattr(pkt, "type", None) == 2:
             ap = getattr(pkt, "addr1", None)
             client = getattr(pkt, "addr2", None)
@@ -236,7 +235,7 @@ def detect(pkt):
                     terminal_alert("LONJAKAN_KLIEN", f"AP {ap} (SSID:{ssid}) menerima {cnt} klien baru dalam {NEW_CLIENT_WINDOW}s")
             return
 
-        # ARP spoof
+
         if pkt.haslayer(ARP) and pkt[ARP].op == 2:
             ip = pkt[ARP].psrc
             mac = pkt[ARP].hwsrc
@@ -248,8 +247,7 @@ def detect(pkt):
     except Exception as e:
         logging.exception(f"Error di detect(): {e}")
 
-# -----------------------------
-# Shutdown handler
+
 def shutdown(signum, frame):
     global running, sniffer
     print("\n[!] Ctrl+C diterima — menghentikan sniffer...")
@@ -260,15 +258,14 @@ def shutdown(signum, frame):
     except Exception:
         pass
 
-# -----------------------------
-# Utility: banner, animasi, progress bar, scans
+
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def show_banner():
     banner_text = "Wifi_detector"
     if _HAS_PYFIGLET:
-        # coba font "abstract" dulu, fallback "slant"
+    
         try:
             banner = pyfiglet.figlet_format(banner_text, font="abstract")
         except Exception:
@@ -277,7 +274,7 @@ def show_banner():
             except Exception:
                 banner = banner_text
     else:
-        # tanpa pyfiglet gunakan teks sederhana artful
+    
         banner = (
             " _       _ _      _   _           _             _             \n"
             "| |     (_) |    | | | |         | |           | |            \n"
@@ -288,7 +285,7 @@ def show_banner():
             "                                           __/ |             \n"
             "                                          |___/              \n"
         )
-    # print banner berwarna merah
+    
     print(COLOR_DANGER + banner + Style.RESET_ALL)
     print(COLOR_DANGER + Style.BRIGHT + "Tools by ghost_root\n" + Style.RESET_ALL)
 
@@ -312,8 +309,7 @@ def progress_bar(duration=2.0):
         time.sleep(step_sleep)
     print("\n")
 
-# -----------------------------
-# Simple port scanner & directory scanner (opsional)
+
 def port_scan(host, ports, timeout=0.5):
     results = {}
     for p in ports:
@@ -341,7 +337,7 @@ def dir_scan(base_host, paths, timeout=2.0):
     Returns dict path -> (found: bool, code:int or err)
     """
     results = {}
-    # normalize
+    
     schemes = ["http://", "https://"]
     for p in paths:
         found = False
@@ -362,7 +358,6 @@ def dir_scan(base_host, paths, timeout=2.0):
                         info = code
             except HTTPError as e:
                 info = getattr(e, "code", str(e))
-                # 401/403 still means resource exists but protected; treat as found
                 if hasattr(e, "code") and e.code in (401, 403):
                     found = True
                     break
@@ -373,16 +368,13 @@ def dir_scan(base_host, paths, timeout=2.0):
         results[p] = (found, info)
     return results
 
-# -----------------------------
-# MAIN
+
 if __name__ == "__main__":
-    # Clear screen and show banner + effects
     clear_screen()
     show_banner()
     creepy_init()
     progress_bar(duration=1.5)
 
-    # Opsional: tanya user apakah ingin menjalankan port & dir scan
     try:
         do_scan = input("Jalankan port & directory scan dulu? (y/n) [n]: ").strip().lower() or "n"
     except Exception:
@@ -390,7 +382,6 @@ if __name__ == "__main__":
 
     if do_scan == "y":
         target = input("Masukkan target (IP atau domain tanpa schema, contoh: 192.168.1.1 atau example.com): ").strip()
-        # default ports & paths
         ports = [21, 22, 80, 443, 8080]
         paths = ["/login", "/admin", "/robots.txt", "/dashboard"]
         print("\n" + COLOR_INFO + "Mulai port scan..." + Style.RESET_ALL)
@@ -412,18 +403,17 @@ if __name__ == "__main__":
         print("\n" + COLOR_INFO + "Scan selesai. Lanjut ke mode pemantauan WiFi." + Style.RESET_ALL)
         time.sleep(1.0)
 
-    # Lanjut ke kode sniffing asli
+
     iface = input("Masukkan interface monitor (misal: wlan0mon): ").strip()
     print(COLOR_INFO + Style.BRIGHT + f"[+] Aktif — memantau interface {iface} (akan menampilkan HANYA serangan yang terdeteksi)" + Style.RESET_ALL)
 
-    # start cleaner thread
+
     cleaner = threading.Thread(target=cleaner_loop, daemon=True)
     cleaner.start()
 
-    # register Ctrl+C handler
     signal.signal(signal.SIGINT, shutdown)
 
-    # start AsyncSniffer
+
     sniffer = AsyncSniffer(iface=iface, prn=detect, store=False)
     try:
         sniffer.start()
