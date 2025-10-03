@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="/img/banner.png" alt="Contoh output WiFi Intrusion Detector" width="800"/>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/WiFi%20Tool-Intrusion%20Detector-red?style=for-the-badge&logo=python"/>
   <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge"/>
   <img src="https://img.shields.io/github/license/USERNAME/REPO?style=for-the-badge"/>
@@ -12,9 +16,7 @@
 
 ---
 
-<p align="center">
-  <img src="/img/banner.png" alt="Contoh output WiFi Intrusion Detector" width="800"/>
-</p>
+
 
 ## 🔎 Ringkasan
 
@@ -121,4 +123,4 @@ t
 
 <p>Script ini dibuat untuk pembelajaran & tujuan keamanan pribadi.
 ❌ Jangan digunakan untuk menyerang atau menguji jaringan orang lain tanpa izin eksplisit.</p>
-# Wifi_Detector_Ghost
+
